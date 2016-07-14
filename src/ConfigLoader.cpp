@@ -5,6 +5,7 @@
 
 #include "ConfigLoader.h"
 #include <fstream>
+#include <iostream>
 
 using std::string;
 
@@ -22,7 +23,9 @@ int practice::ConfigLoader::load(){
 	const string::size_type delimiter_len = _delimiter.length();
 
 	string buff;
-	
+	string key;
+	string value;
+
 	string name_str;
 	string class_str;
 	string type_str;
@@ -30,28 +33,35 @@ int practice::ConfigLoader::load(){
 	FieldInfo* field = NULL;
 
 	while(std::getline(in, buff)){
+
 		this->trim(buff);
 
 		//ignore commit line
-		if(buff.find_first_of(_commit) > 0){
+		size_t commit_index = buff.find(_commit);
+		if(commit_index != string::npos){
+			std::cout << "commit:" << buff << std::endl;
 			buff = '\0';
 			continue;
 		}
 
 		//new config node
-		if(buff.find_first_of("[field]") == 0){
-
+		size_t field_index = buff.find("[field]");
+		if(field_index != string::npos){
+			buff = '\0';
 			continue;
 		}
 
-		size_t d_idx = buff.find_first_of(_delimiter);
+		size_t d_idx = buff.find(_delimiter);
 
 		//config data
-		if(d_idx > 0 && d_idx + delimiter_len < buff.length()){
-			string key = buff.substr(0, d_idx);
-			string value = buff.substr(d_idx+delimiter_len);
+		if(d_idx > 1 && \
+				d_idx != string::npos && \
+				d_idx + delimiter_len < buff.length()){
+			key = buff.substr(0, d_idx);
+			value = buff.substr(d_idx + delimiter_len);
 			this->trim(key);
 			this->trim(value);
+			std::cout << "key:" << key << " \tvalue:" << value << std::endl;
 		}
 	}
 
