@@ -30,7 +30,7 @@ int practice::ConfigLoader::load(){
 	string class_str;
 	string type_str;
 	
-	FieldInfo* field = NULL;
+	FieldInfo* field;
 
 	while(std::getline(in, buff)){
 
@@ -48,12 +48,13 @@ int practice::ConfigLoader::load(){
 		size_t field_index = buff.find("[field]");
 		if(field_index != string::npos){
 			buff = '\0';
+			field = new FieldInfo();
 			continue;
 		}
 
 		size_t d_idx = buff.find(_delimiter);
 
-		//config data
+		//config text line
 		if(d_idx > 1 && \
 				d_idx != string::npos && \
 				d_idx + delimiter_len < buff.length()){
@@ -61,11 +62,13 @@ int practice::ConfigLoader::load(){
 			value = buff.substr(d_idx + delimiter_len);
 			this->trim(key);
 			this->trim(value);
-			std::cout << "key:" << key << " \tvalue:" << value << std::endl;
+			if(field->set_value(key,value) < 0){
+				std::cout << "Config error1:" << buff << std::endl;
+			}else{
+				std::cout << "Config:key[" << key <<"] value:["<< value << "]" << std::endl;
+			}
 		}
 	}
-
-	FieldInfo* fi = NULL;
 
 	return -1;
 }
