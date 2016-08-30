@@ -1,0 +1,11 @@
+include_directories(${PROJECT_SOURCE_DIR}/libpractice)
+link_directories(${CMAKE_INSTALL_PREFEX}/lib)
+aux_source_directory(. APP_SRC)
+set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin)
+add_executable(practice ${APP_SRC})
+target_link_libraries(practice libpractice)
+#set(GLOG_LIB include)
+#link_directories(${PROJECT_ROOT_DIR}/include)
+target_link_libraries(practice -lglog
+		-lpthread)
+install(TARGETS practice RUNTIME DESTINATION bin)
