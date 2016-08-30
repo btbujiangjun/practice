@@ -18,13 +18,44 @@ enum FieldType{
 	BUILT_IN = 1,
 	POINTER,
 	ARRAY,
+	CUSTOMIZED,
 	FIELDTYPE_COUNT
 };
 
-struct FieldInfo{
-	std::string field_name;
-	std::string field_class;
-	FieldType field_type;
+class FieldInfo{
+public:
+	FieldInfo(): \
+		_name("\0"), \
+		_class("\0"), \
+		_type(BUILT_IN){};
+
+	int set_value(const std::string key, const std::string value){
+		if(key == "name"){
+			_name = value;
+		}else if(key == "class"){
+			_name = value;
+		}else if(key == "type"){
+			if(value == "built-in"){
+				_type = BUILT_IN;
+			}else if(value == "pointer"){
+				_type = POINTER;
+			}else if(value == "array"){
+				_type = ARRAY;
+			}else if(value == "customized"){
+				_type = CUSTOMIZED;
+			}else{
+				return -2;
+			}
+		}else{
+			return -1;
+		}
+		return 0;
+	}
+
+private:
+	std::string _name;
+	std::string _class;
+	FieldType _type;
 };
 
 class ConfigLoader{
@@ -54,7 +85,7 @@ private:
 	std::string _commit;
 
 	FieldInfo* _fields;
-	//DISALLOW_COPY_AND_ASSIGN(ConfigLoader);
+	DISALLOW_COPY_AND_ASSIGN(ConfigLoader);
 };// ConfigLoader
 } // practice
 #endif //PRACTICE_CONFIGLOADER_H
